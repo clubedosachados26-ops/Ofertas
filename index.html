@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caça Ofertas</title>
+<meta name="description" content="As melhores ofertas e promoções selecionadas, atualizadas todos os dias.">
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --txt:#1b1f24; --mut:#667085; --bd:#e4e7ec;
+          --pri:#e8590c; --ok:#0b8a4b; --chip:#fff4e6; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0f1216; --card:#181c22; --txt:#eef0f3; --mut:#98a2b3; --bd:#2a3039;
+            --pri:#ff8a4c; --ok:#3ddc84; --chip:#2b1d12; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt);
+         font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+  header { padding:28px 16px 8px; max-width:1100px; margin:0 auto; }
+  h1 { margin:0; font-size:1.6rem; } h1 span { color:var(--pri); }
+  header p { margin:4px 0 0; color:var(--mut); }
+  .filtros { max-width:1100px; margin:16px auto; padding:0 16px; display:grid; gap:10px;
+             grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+  .filtros label { font-size:.75rem; color:var(--mut); display:block; margin-bottom:2px; }
+  input, select { width:100%; padding:10px; border:1px solid var(--bd); border-radius:8px;
+                  background:var(--card); color:var(--txt); font:inherit; }
+  #contagem { max-width:1100px; margin:0 auto; padding:0 16px; color:var(--mut); font-size:.9rem; }
+  .grid { max-width:1100px; margin:10px auto 40px; padding:0 16px; display:grid; gap:14px;
+          grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .card { display:flex; flex-direction:column; background:var(--card); border:1px solid var(--bd);
+          border-radius:12px; overflow:hidden; text-decoration:none; color:inherit; position:relative;
+          transition:transform .12s, box-shadow .12s; }
+  .card:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.12); }
+  .thumb { height:130px; display:flex; align-items:center; justify-content:center;
+           font-size:3rem; background:var(--chip); }
+  .thumb img { max-width:100%; max-height:100%; object-fit:contain; }
+  .badge { position:absolute; top:10px; left:10px; background:var(--pri); color:#fff;
+           font-weight:700; font-size:.8rem; padding:3px 8px; border-radius:99px; }
+  .corpo { padding:12px; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .loja { font-size:.75rem; color:var(--mut); text-transform:uppercase; letter-spacing:.04em; }
+  .titulo { font-weight:600; font-size:.95rem; flex:1; }
+  .antigo { color:var(--mut); text-decoration:line-through; font-size:.85rem; }
+  .preco { font-size:1.35rem; font-weight:800; }
+  .menor { color:var(--ok); font-size:.78rem; font-weight:600; }
+  .cta { margin-top:6px; text-align:center; background:var(--pri); color:#fff; padding:9px;
+         border-radius:8px; font-weight:700; }
+  .vazio { grid-column:1/-1; text-align:center; color:var(--mut); padding:40px 0; }
+  footer { max-width:1100px; margin:0 auto; padding:0 16px 40px; color:var(--mut); font-size:.8rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🔥 <span>Caça Ofertas</span></h1>
+  <p>Ofertas selecionadas. Atualizado em 18/11/2026 18:12.</p>
+</header>
+
+<section class="filtros">
+  <div><label for="q">Buscar</label><input id="q" type="search" placeholder="Ex.: fone, air fryer..."></div>
+  <div><label for="loja">Loja</label><select id="loja"><option value="">Todas</option></select></div>
+  <div><label for="cat">Categoria</label><select id="cat"><option value="">Todas</option></select></div>
+  <div><label for="desc">Desconto mínimo</label>
+    <select id="desc"><option value="0">Qualquer</option><option value="10">10%+</option>
+    <option value="20">20%+</option><option value="30">30%+</option><option value="40">40%+</option></select></div>
+  <div><label for="ord">Ordenar por</label>
+    <select id="ord"><option value="desc">Maior desconto</option><option value="menor">Menor preço</option>
+    <option value="maior">Maior preço</option></select></div>
+</section>
+
+<div id="contagem"></div>
+<main class="grid" id="grid"></main>
+
+<footer>
+  Aviso: os links acima podem ser links de afiliado; ao comprar por eles podemos receber uma comissão,
+  sem custo extra para você. Preços e disponibilidade podem mudar a qualquer momento nas lojas.
+</footer>
+
+<script>
+const DADOS = [{"titulo": "Tênis de Corrida Masculino Amortecido", "loja": "Shopee", "categoria": "Moda", "preco": 129.9, "preco_anterior": 259.9, "desconto": 50, "imagem": "", "link": "https://example.com/shopee/tenis-corrida", "menor_preco": false}, {"titulo": "Fone Bluetooth Sem Fio com Cancelamento de Ruído", "loja": "Amazon", "categoria": "Eletrônicos", "preco": 179.9, "preco_anterior": 299.9, "desconto": 40, "imagem": "", "link": "https://example.com/amazon/fone-anc", "menor_preco": false}, {"titulo": "Kit 3 Camisetas Básicas Algodão", "loja": "Shopee", "categoria": "Moda", "preco": 59.9, "preco_anterior": 99.9, "desconto": 40, "imagem": "", "link": "https://example.com/shopee/kit-camisetas", "menor_preco": false}, {"titulo": "SSD NVMe 1TB Leitura 3500MB/s", "loja": "Amazon", "categoria": "Informática", "preco": 389.0, "preco_anterior": 599.0, "desconto": 35, "imagem": "", "link": "https://example.com/amazon/ssd-1tb", "menor_preco": false}, {"titulo": "Mochila Notebook Impermeável 15.6\"", "loja": "Mercado Livre", "categoria": "Acessórios", "preco": 74.9, "preco_anterior": 109.9, "desconto": 32, "imagem": "", "link": "https://example.com/ml/mochila-notebook", "menor_preco": false}, {"titulo": "Robô Aspirador Inteligente Wi-Fi", "loja": "Amazon", "categoria": "Casa", "preco": 899.0, "preco_anterior": 1299.0, "desconto": 31, "imagem": "", "link": "https://example.com/amazon/robo-aspirador", "menor_preco": false}, {"titulo": "Air Fryer Digital 5L Preta", "loja": "Mercado Livre", "categoria": "Casa", "preco": 349.0, "preco_anterior": 499.0, "desconto": 30, "imagem": "", "link": "https://example.com/ml/air-fryer-5l", "menor_preco": false}, {"titulo": "Smartphone 128GB Tela 6.5\" Dual Chip", "loja": "Magalu", "categoria": "Celulares", "preco": 1099.0, "preco_anterior": 1499.0, "desconto": 27, "imagem": "", "link": "https://example.com/magalu/smartphone-128", "menor_preco": false}, {"titulo": "Cafeteira Elétrica 30 Xícaras", "loja": "Mercado Livre", "categoria": "Casa", "preco": 89.9, "preco_anterior": 119.9, "desconto": 25, "imagem": "", "link": "https://example.com/ml/cafeteira-30", "menor_preco": false}, {"titulo": "Monitor Gamer 24\" 144Hz Full HD", "loja": "Amazon", "categoria": "Informática", "preco": 749.9, "preco_anterior": 989.9, "desconto": 24, "imagem": "", "link": "https://example.com/amazon/monitor-144", "menor_preco": false}, {"titulo": "Smart TV 50\" 4K UHD", "loja": "Magalu", "categoria": "Eletrônicos", "preco": 1899.0, "preco_anterior": 2499.0, "desconto": 24, "imagem": "", "link": "https://example.com/magalu/tv-50-4k", "menor_preco": false}, {"titulo": "Mouse Sem Fio Ergonômico Recarregável", "loja": "Magalu", "categoria": "Informática", "preco": 69.9, "preco_anterior": 79.9, "desconto": 13, "imagem": "", "link": "https://example.com/magalu/mouse-ergo", "menor_preco": false}];
+const $ = id => document.getElementById(id);
+const brl = n => n.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const EMOJI = {"Eletrônicos":"🎧","Casa":"🏠","Celulares":"📱","Informática":"💻","Moda":"👟","Acessórios":"🎒"};
+
+function opcoes(sel, valores) {
+  [...new Set(valores)].sort().forEach(v => {
+    const o = document.createElement("option"); o.value = v; o.textContent = v; sel.appendChild(o);
+  });
+}
+
+function el(tag, cls, txt) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (txt !== undefined) e.textContent = txt;
+  return e;
+}
+
+function card(o) {
+  const a = el("a", "card");
+  a.href = o.link; a.target = "_blank"; a.rel = "noopener noreferrer sponsored nofollow";
+  const thumb = el("div", "thumb");
+  if (o.imagem) {
+    const img = document.createElement("img"); img.src = o.imagem; img.alt = ""; img.loading = "lazy";
+    thumb.appendChild(img);
+  } else { thumb.textContent = EMOJI[o.categoria] || "🛍️"; }
+  a.appendChild(thumb);
+  if (o.desconto > 0) a.appendChild(el("span", "badge", "-" + o.desconto + "%"));
+  const c = el("div", "corpo");
+  c.appendChild(el("div", "loja", o.loja));
+  c.appendChild(el("div", "titulo", o.titulo));
+  if (o.preco_anterior) c.appendChild(el("div", "antigo", brl(o.preco_anterior)));
+  c.appendChild(el("div", "preco", brl(o.preco)));
+  if (o.menor_preco) c.appendChild(el("div", "menor", "✓ Menor preço registrado"));
+  c.appendChild(el("div", "cta", "Ver oferta"));
+  a.appendChild(c);
+  return a;
+}
+
+function render() {
+  const q = $("q").value.trim().toLowerCase(), loja = $("loja").value, cat = $("cat").value;
+  const min = +$("desc").value, ord = $("ord").value;
+  const lista = DADOS.filter(o =>
+    (!q || o.titulo.toLowerCase().includes(q)) && (!loja || o.loja === loja) &&
+    (!cat || o.categoria === cat) && o.desconto >= min);
+  lista.sort((a, b) => ord === "menor" ? a.preco - b.preco : ord === "maior" ? b.preco - a.preco : b.desconto - a.desconto);
+  const grid = $("grid"); grid.replaceChildren();
+  if (!lista.length) grid.appendChild(el("div", "vazio", "Nenhuma oferta encontrada com esses filtros."));
+  lista.forEach(o => grid.appendChild(card(o)));
+  $("contagem").textContent = lista.length + (lista.length === 1 ? " oferta" : " ofertas");
+}
+
+opcoes($("loja"), DADOS.map(o => o.loja));
+opcoes($("cat"), DADOS.map(o => o.categoria));
+["q","loja","cat","desc","ord"].forEach(id => $(id).addEventListener("input", render));
+render();
+</script>
+</body>
+</html>
